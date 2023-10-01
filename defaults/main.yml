@@ -36,10 +36,6 @@ lpar2rrdserver_packages:
   - procps
   - openssh-clients
   - cronie
-  # - mc                  # optional
-  # - wget                # optional
-  # - bash-completion     # optional
-  # - curl                # optional
 
 lpar2rrdserver_pam_limits:
     - domain: "{{ lpar2rrdserver_user }}"
