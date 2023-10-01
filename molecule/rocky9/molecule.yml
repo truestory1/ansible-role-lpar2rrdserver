@@ -8,10 +8,11 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: lpar2rrd-rhel9
+  - name: lpar2rrd-rocky9
     pre_build_image: false
     # renovate: datasource=docker
-    image: registry.access.redhat.com/ubi9/ubi-init:latest
+    image: rockylinux/rockylinux:9
+    dockerfile: Dockerfile.j2
     privileged: true
     command: "/usr/sbin/init"
 
