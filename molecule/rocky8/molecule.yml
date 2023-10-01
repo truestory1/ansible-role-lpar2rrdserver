@@ -11,7 +11,7 @@ platforms:
   - name: lpar2rrd-rhel8
     pre_build_image: false
     # renovate: datasource=docker
-    image: registry.access.redhat.com/ubi8/ubi-init:latest
+    image: rockylinux/rockylinux:8
     privileged: true
     command: "/usr/sbin/init"
 
