@@ -8,7 +8,7 @@ dependency:
 driver:
   name: docker
 platforms:
-  - name: lpar2rrd-rhel8
+  - name: lpar2rrd-rocky8
     pre_build_image: false
     # renovate: datasource=docker
     image: rockylinux/rockylinux:8
