@@ -1,0 +1,20 @@
+---
+- name: Ensure we all the dependecies
+  hosts: all
+  gather_facts: true
+  tasks:
+    - name: Rhel
+      when: ansible_facts['distribution'] in ['RedHat']
+      block:
+        - name: Rhel deps
+          ansible.builtin.package:
+            name:
+              - crontabs
+              - cronie
+            state: present
+
+        - name: Rhel- start cron service
+          ansible.builtin.service:
+            name: crond
+            enabled: true
+            state: started

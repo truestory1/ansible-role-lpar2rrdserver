@@ -1,0 +1,16 @@
+---
+- name: Verify
+  hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check if the service is up
+      ansible.builtin.uri:
+        url: http://localhost:80/lpar2rrd/
+        return_content: true
+      register: result
+
+    - name: Check the result
+      ansible.builtin.assert:
+        that:
+          - result.status == 200
+          - result.content.find('<title>LPAR2RRD</title>') != -1

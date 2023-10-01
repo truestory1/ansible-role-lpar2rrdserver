@@ -1,0 +1,17 @@
+AddHandler cgi-script .sh
+# DocumentRoot  "{{ lpar2rrdserver_install_dir }}/www/"
+Alias /lpar2rrd  "{{ lpar2rrdserver_install_dir }}/www/"
+<Directory "{{ lpar2rrdserver_install_dir }}/www/">
+    AllowOverride AuthConfig
+    Options Indexes FollowSymLinks
+    Require all granted
+</Directory>
+
+# CGI-BIN
+ScriptAlias /lpar2rrd-cgi/ "{{ lpar2rrdserver_install_dir }}/lpar2rrd-cgi/"
+<Directory "{{ lpar2rrdserver_install_dir }}/lpar2rrd-cgi">
+    AllowOverride AuthConfig
+    SetHandler cgi-script
+    Options ExecCGI FollowSymLinks
+    Require all granted
+</Directory>

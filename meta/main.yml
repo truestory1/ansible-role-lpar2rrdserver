@@ -1,0 +1,20 @@
+galaxy_info:
+  author: qwerty
+  description: Lpar2rrd server installation
+  namespace: test
+  role_name: lpar2rrd_server
+
+  license: copyleft
+
+  min_ansible_version: "2.1"
+
+  platforms:
+  - name: EL
+    versions:
+    - "9"
+    - "8"
+
+  galaxy_tags: []
+
+
+dependencies: []

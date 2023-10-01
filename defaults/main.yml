@@ -1,0 +1,92 @@
+---
+lpar2rrdserver_version: "7.70"
+lpar2rrdserver_user: lpar2rrd
+lpar2rrdserver_user_home: "/home/{{ lpar2rrdserver_user }}"
+lpar2rrdserver_install_dir: "{{ lpar2rrdserver_user_home }}/lpar2rrd"
+lpar2rrdserver_download_url: "https://sourceforge.net/projects/lpar2rrd/files/lpar2rrd/{{ lpar2rrdserver_version }}/lpar2rrd-{{ lpar2rrdserver_version }}.tar/download"
+
+lpar2rrdserver_packages:
+  - perl
+  - rrdtool
+  - rrdtool-perl
+  - httpd
+  - mod_ssl
+  - perl-TimeDate
+  - perl-HTTP-Date
+  - perl-Env
+  - perl-CGI
+  - perl-Data-Dumper
+  - perl-LWP-Protocol-https
+  - perl-libwww-perl
+  - perl-Time-HiRes
+  - perl-IO-Tty
+  # - perl-PDF-API2
+  - perl-JSON-XS
+  - perl-XML-Simple
+  - perl-XML-NamespaceSupport
+  - perl-URI
+  - perl-XML-SAX-Base
+  - perl-XML-SAX
+  - perl-XML-LibXML
+  - ed
+  - bc
+  - libxml2
+  - sharutils
+  - which
+  - procps
+  - openssh-clients
+  - cronie
+  - mc                  # optional
+  - wget                # optional
+  - bash-completion     # optional
+  - curl                # optional
+
+lpar2rrdserver_pam_limits:
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: hard
+      limit_item: stack
+      value: -1
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: soft
+      limit_item: stack
+      value: -1
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: hard
+      limit_item: data
+      value: -1
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: soft
+      limit_item: data
+      value: -1
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: hard
+      limit_item: nofile
+      value: 32768
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: soft
+      limit_item: nofile
+      value: 32768
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: hard
+      limit_item: nproc
+      value: 5000
+    - domain: "{{ lpar2rrdserver_user }}"
+      limit_type: soft
+      limit_item: nproc
+      value: 5000
+    - domain: apache
+      limit_type: hard
+      limit_item: stack
+      value: -1
+    - domain: apache
+      limit_type: soft
+      limit_item: stack
+      value: -1
+    - domain: apache
+      limit_type: hard
+      limit_item: data
+      value: -1
+    - domain: apache
+      limit_type: soft
+      limit_item: data
+      value: -1

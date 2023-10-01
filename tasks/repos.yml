@@ -1,0 +1,29 @@
+---
+- name: Enable epel repo
+  ansible.builtin.yum:
+    name: epel-release
+    state: present
+    update_cache: true
+  when:
+    - ansible_distribution in ['RedHat', 'Rocky']
+
+- name: Enable repo in RHEL9
+  ansible.builtin.command: dnf config-manager --set-enabled crb
+  changed_when: false
+  when:
+    - ansible_distribution in ['RedHat', 'Rocky']
+    - ansible_distribution_major_version == '9'
+
+- name: Enable repo in RHEL8
+  ansible.builtin.command: dnf config-manager --set-enabled powertools
+  changed_when: false
+  when:
+    - ansible_distribution in ['RedHat', 'Rocky']
+    - ansible_distribution_major_version == '8'
+
+- name: Enable repo in Oracle8
+  ansible.builtin.command: dnf config-manager --set-enabled ol8_codeready_builder
+  changed_when: false
+  when:
+    - ansible_distribution in ['OracleLinux']
+    - ansible_distribution_major_version == '8'

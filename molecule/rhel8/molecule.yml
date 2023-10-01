@@ -1,0 +1,24 @@
+---
+lint: |
+  set -e
+  yamllint .
+  ansible-lint -f full
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: lpar2rrd-rhel8
+    pre_build_image: false
+    # renovate: datasource=docker
+    image: registry.access.redhat.com/ubi8/ubi-init:latest
+    privileged: true
+    command: "/usr/sbin/init"
+
+provisioner:
+  name: ansible
+  playbooks:
+    converge: ../shared_files/converge.yml
+    prepare: ../shared_files/prepare.yml
+verifier:
+  name: ansible

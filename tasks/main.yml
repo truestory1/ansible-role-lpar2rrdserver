@@ -1,0 +1,118 @@
+---
+- name: Enable repositories
+  ansible.builtin.include_tasks:
+    file: repos.yml
+
+- name: Install required dependecies
+  ansible.builtin.package:
+    state: present
+    name: "{{ lpar2rrdserver_packages }}"
+
+- name: Create lpar2rrd user
+  ansible.builtin.user:
+    name: "{{ lpar2rrdserver_user }}"
+    state: present
+    shell: "{{ lpar2rrdserver_user_shell | default('/bin/bash') }}"
+    uid: "{{ lpar2rrdserver_user_uid | default(omit) }}"
+    group: "{{ lpar2rrdserver_group | default(omit) }}"
+    home: "{{ lpar2rrdserver_user_home }}"
+    generate_ssh_key: true
+    createhome: true
+
+- name: Ensure lpar2rrd directories have correct permissions
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: "{{ item.mode }}"
+    owner: "{{ lpar2rrdserver_user }}"
+    group: "{{ lpar2rrdserver_user }}"
+  loop:
+    - path: "{{ lpar2rrdserver_user_home }}"
+      mode: "0755"
+    - path: "{{ lpar2rrdserver_install_dir }}"
+      mode: "0755"
+
+- name: Modify lpar2rrd system limits
+  community.general.pam_limits:
+    domain: "{{ item.domain }}"
+    limit_type: "{{ item.limit_type }}"
+    limit_item: "{{ item.limit_item }}"
+    value: "{{ item.value }}"
+  loop: "{{ lpar2rrdserver_pam_limits }}"
+
+- name: Start required services
+  ansible.builtin.service:
+    name: "{{ item }}"
+    state: started
+    enabled: true
+  loop:
+    - httpd
+    - crond
+
+- name: Deploy http configuration file
+  ansible.builtin.template:
+    src: apache.j2
+    dest: /etc/httpd/conf.d/lpar2rrd.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify:
+    - Restart httpd
+
+- name: Download installation file
+  ansible.builtin.get_url:
+    url: "{{ lpar2rrdserver_download_url }}"
+    dest: /tmp/lpar2rrd-server.tar
+    mode: "0644"
+  register: download_result
+
+- name: Extract installation file
+  # noqa: no-handler
+  ansible.builtin.unarchive:
+    src: /tmp/lpar2rrd-server.tar
+    dest: /tmp
+    remote_src: true
+    owner: "{{ lpar2rrdserver_user }}"
+    mode: "0755"
+  when: download_result.changed
+
+- name: Start installation
+  ansible.builtin.command: ./scripts/install.sh {{ lpar2rrdserver_install_dir }}
+  become: true
+  become_user: "{{ lpar2rrdserver_user }}"
+  args:
+    chdir: "/tmp/lpar2rrd-{{ lpar2rrdserver_version }}"
+    creates: "{{ lpar2rrdserver_install_dir }}/bin/lpar2rrd.pl"
+  register: install_result
+
+- name: Check installation result
+  ansible.builtin.debug:
+    msg: "{{ install_result.stdout_lines }}"
+  when: install_result.stdout_lines is defined
+
+- name: Run load.sh after installation (first time)
+  ansible.builtin.command: "{{ lpar2rrdserver_install_dir }}/load.sh"
+  # noqa: no-handler
+  become: true
+  become_user: "{{ lpar2rrdserver_user }}"
+  args:
+    chdir: "{{ lpar2rrdserver_install_dir }}"
+  when: install_result.changed
+  changed_when: false
+  register: load_result
+
+- name: Check load.sh result
+  ansible.builtin.debug:
+    msg: "{{ load_result.stdout_lines }}"
+  when: load_result.stdout_lines is defined
+
+- name: Deploy lpar2rrd crontab
+  ansible.builtin.cron:
+    name: LPAR2RRD UI
+    minute: "0,30"
+    hour: "*"
+    day: "*"
+    weekday: "*"
+    month: "*"
+    user: "{{ lpar2rrdserver_user }}"
+    job: "{{ lpar2rrdserver_install_dir }}/load.sh > {{ lpar2rrdserver_install_dir }}/load.out 2>&1"

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "ansible-galaxy": {
+    "fileMatch": [
+      "(^|/)collections\\.ya?ml$"
+    ]
+  }
+ }
