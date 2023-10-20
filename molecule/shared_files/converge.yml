@@ -2,6 +2,6 @@
 - name: Converge
   hosts: all
   tasks:
-    - name: "Include ansible-role-lpar2rrdserver"
+    - name: "Include ansible-role-lpar2rrd-server"
       ansible.builtin.include_role:
-        name: "ansible-role-lpar2rrdserver"
+        name: "ansible-role-lpar2rrd-server"
