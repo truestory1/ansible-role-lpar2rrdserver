@@ -3,7 +3,7 @@ lpar2rrdserver_version: "7.80-1"
 lpar2rrdserver_user: lpar2rrd
 lpar2rrdserver_user_home: "/home/{{ lpar2rrdserver_user }}"
 lpar2rrdserver_install_dir: "{{ lpar2rrdserver_user_home }}/lpar2rrd"
-lpar2rrdserver_download_url: "https://sourceforge.net/projects/lpar2rrd/files/lpar2rrd/{{ lpar2rrdserver_version }}/lpar2rrd-{{ lpar2rrdserver_version }}.tar/download"
+lpar2rrdserver_download_url: "https://sourceforge.net/projects/lpar2rrd/files/lpar2rrd/{{ lpar2rrdserver_version | split('-') | first }}/lpar2rrd-{{ lpar2rrdserver_version }}.tar/download"
 
 lpar2rrdserver_packages:
   - perl
