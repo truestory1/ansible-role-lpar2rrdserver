@@ -12,7 +12,7 @@
     dnf config-manager --set-enabled {{ item.repo }}
   changed_when: false
   loop:
-    - { repo: 'crb', dist: 'RedHat', version: '9' }
-    - { repo: 'powertools', dist: 'RedHat', version: '8' }
-    - { repo: 'ol8_codeready_builder', dist: 'OracleLinux', version: '8' }
-  when: ansible_distribution == item.dist and ansible_distribution_major_version == item.version
+    - { repo: 'crb', dist: ['RedHat', 'Rocky'], version: ['9'] }
+    - { repo: 'powertools', dist: ['RedHat', 'Rocky'], version: ['8'] }
+    - { repo: 'ol8_codeready_builder', dist: ['OracleLinux'], version: ['8'] }
+  when: ansible_distribution in item.dist and ansible_distribution_major_version in item.version
