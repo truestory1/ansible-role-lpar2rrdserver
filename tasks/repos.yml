@@ -7,23 +7,12 @@
   when:
     - ansible_distribution in ['RedHat', 'Rocky']
 
-- name: Enable repo in RHEL9
-  ansible.builtin.command: dnf config-manager --set-enabled crb
+- name: Enable repository based on distribution and version
+  ansible.builtin.command: >
+    dnf config-manager --set-enabled {{ item.repo }}
   changed_when: false
-  when:
-    - ansible_distribution in ['RedHat', 'Rocky']
-    - ansible_distribution_major_version == '9'
-
-- name: Enable repo in RHEL8
-  ansible.builtin.command: dnf config-manager --set-enabled powertools
-  changed_when: false
-  when:
-    - ansible_distribution in ['RedHat', 'Rocky']
-    - ansible_distribution_major_version == '8'
-
-- name: Enable repo in Oracle8
-  ansible.builtin.command: dnf config-manager --set-enabled ol8_codeready_builder
-  changed_when: false
-  when:
-    - ansible_distribution in ['OracleLinux']
-    - ansible_distribution_major_version == '8'
+  loop:
+    - { repo: 'crb', dist: 'RedHat', version: '9' }
+    - { repo: 'powertools', dist: 'RedHat', version: '8' }
+    - { repo: 'ol8_codeready_builder', dist: 'OracleLinux', version: '8' }
+  when: ansible_distribution == item.dist and ansible_distribution_major_version == item.version
