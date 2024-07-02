@@ -18,8 +18,8 @@
   ansible.builtin.user:
     name: "{{ lpar2rrdserver_user }}"
     uid: "{{ lpar2rrdserver_user_id | default(omit) }}"
-    group: "{{ lpar2rrd_group }}"
-    shell: "{{ lpar2rrd_shell }}"
+    group: "{{ lpar2rrdserver_group }}"
+    shell: "{{ lpar2rrd_shell | default(omit) }}"
     state: present
     generate_ssh_key: true
     createhome: true
