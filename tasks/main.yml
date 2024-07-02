@@ -14,7 +14,7 @@
     state: present
     shell: "{{ lpar2rrdserver_user_shell | default('/bin/bash') }}"
     uid: "{{ lpar2rrdserver_user_uid | default(omit) }}"
-    group: "{{ lpar2rrdserver_group | default(omit) }}"
+    group: "{{ lpar2rrdserver_group }}"
     home: "{{ lpar2rrdserver_user_home }}"
     generate_ssh_key: true
     createhome: true
@@ -25,7 +25,7 @@
     state: directory
     mode: "{{ item.mode }}"
     owner: "{{ lpar2rrdserver_user }}"
-    group: "{{ lpar2rrdserver_user }}"
+    group: "{{ lpar2rrdserver_group }}"
   loop:
     - path: "{{ lpar2rrdserver_user_home }}"
       mode: "0755"
