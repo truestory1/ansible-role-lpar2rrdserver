@@ -8,16 +8,16 @@
     state: present
     name: "{{ lpar2rrdserver_packages }}"
 
-- name: Add group - {{ lpar2rrd_group }}
+- name: Add group - {{ lpar2rrdserver_group }}
   ansible.builtin.group:
-    name: "{{ lpar2rrd_group }}"
-    gid: "{{ lpar2rrd_groupgid | default(omit) }}"
+    name: "{{ lpar2rrdserver_group }}"
+    gid: "{{ lpar2rrdserver_group_id | default(omit) }}"
     state: present
 
-- name: Add user - {{ lpar2rrd_user }}
+- name: Add user - {{ lpar2rrdserver_user }}
   ansible.builtin.user:
-    name: "{{ lpar2rrd_user }}"
-    uid: "{{ lpar2rrd_useruid | default(omit) }}"
+    name: "{{ lpar2rrdserver_user }}"
+    uid: "{{ lpar2rrdserver_user_id | default(omit) }}"
     group: "{{ lpar2rrd_group }}"
     shell: "{{ lpar2rrd_shell }}"
     state: present
