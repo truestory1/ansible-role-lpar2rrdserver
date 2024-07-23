@@ -8,14 +8,19 @@
     state: present
     name: "{{ lpar2rrdserver_packages }}"
 
-- name: Create lpar2rrd user
+- name: Add group - {{ lpar2rrdserver_group }}
+  ansible.builtin.group:
+    name: "{{ lpar2rrdserver_group }}"
+    gid: "{{ lpar2rrdserver_group_id | default(omit) }}"
+    state: present
+
+- name: Add user - {{ lpar2rrdserver_user }}
   ansible.builtin.user:
     name: "{{ lpar2rrdserver_user }}"
+    uid: "{{ lpar2rrdserver_user_id | default(omit) }}"
+    group: "{{ lpar2rrdserver_group }}"
+    shell: "{{ lpar2rrd_shell | default(omit) }}"
     state: present
-    shell: "{{ lpar2rrdserver_user_shell | default('/bin/bash') }}"
-    uid: "{{ lpar2rrdserver_user_uid | default(omit) }}"
-    group: "{{ lpar2rrdserver_group | default(omit) }}"
-    home: "{{ lpar2rrdserver_user_home }}"
     generate_ssh_key: true
     createhome: true
 
@@ -25,7 +30,7 @@
     state: directory
     mode: "{{ item.mode }}"
     owner: "{{ lpar2rrdserver_user }}"
-    group: "{{ lpar2rrdserver_user }}"
+    group: "{{ lpar2rrdserver_group }}"
   loop:
     - path: "{{ lpar2rrdserver_user_home }}"
       mode: "0755"
